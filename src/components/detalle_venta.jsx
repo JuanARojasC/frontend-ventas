@@ -36,7 +36,7 @@ function DetalleVenta() {
           </tr>
         </thead>
         <tbody>
-          {detalles.map(d => (
+          {Array.isArray(detalles) && detalles.map(d => (
             <tr key={d.id_detalle}>
               <td>{d.id_detalle}</td>
               <td>{d.id_venta}</td>
