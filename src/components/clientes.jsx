@@ -35,7 +35,7 @@ function Clientes() {
           </tr>
         </thead>
         <tbody>
-          {clientes.map(c => (
+          {Array.isArray(clientes) && clientes.map(c => (
             <tr key={c.id_cliente}>
               <td>{c.id_cliente}</td>
               <td>{c.nomcliente}</td>
