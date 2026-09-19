@@ -6,11 +6,9 @@ function Productos() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para manejar la edición
   const [editandoId, setEditandoId] = useState(null);
   const [formData, setFormData] = useState({ nomproducto: '', cantidad: '', precio: '' });
 
-  // Función para obtener los datos (la separamos para poder reutilizarla al editar)
   const cargarProductos = () => {
     api.get('/productos')
       .then(response => {
@@ -27,13 +25,10 @@ function Productos() {
     cargarProductos();
   }, []);
 
-  // --- FUNCIÓN ELIMINAR ---
   const eliminarProducto = async (id) => {
-    // Pedimos confirmación antes de borrar
     if (window.confirm('¿Seguro que deseas eliminar este producto?')) {
       try {
         await api.delete(`/productos/${id}`);
-        // Actualizamos el estado local filtrando el producto eliminado para no recargar la página
         setProductos(productos.filter(p => p.id_producto !== id)); 
       } catch (err) {
         alert('Error al eliminar el producto');
@@ -41,7 +36,6 @@ function Productos() {
     }
   };
 
-  // --- FUNCIONES EDITAR ---
   const iniciarEdicion = (producto) => {
     setEditandoId(producto.id_producto);
     setFormData({
@@ -63,8 +57,8 @@ function Productos() {
   const guardarEdicion = async (id) => {
     try {
       await api.put(`/productos/${id}`, formData);
-      setEditandoId(null); // Salimos del modo edición
-      cargarProductos(); // Volvemos a pedir los datos a la base de datos para ver los cambios
+      setEditandoId(null);
+      cargarProductos();
     } catch (err) {
       alert('Error al actualizar el producto');
     }
@@ -87,11 +81,9 @@ function Productos() {
           </tr>
         </thead>
         <tbody>
-          {productos.map(p => (
+          {Array.isArray(productos) && productos.map(p => (
             <tr key={p.id_producto}>
               <td>{p.id_producto}</td>
-              
-              {/* Celda: Nombre */}
               <td>
                 {editandoId === p.id_producto ? (
                   <input name="nomproducto" value={formData.nomproducto} onChange={manejarCambio} />
@@ -99,8 +91,6 @@ function Productos() {
                   p.nomproducto
                 )}
               </td>
-              
-              {/* Celda: Cantidad */}
               <td>
                 {editandoId === p.id_producto ? (
                   <input type="number" name="cantidad" value={formData.cantidad} onChange={manejarCambio} />
@@ -108,8 +98,6 @@ function Productos() {
                   p.cantidad
                 )}
               </td>
-              
-              {/* Celda: Precio */}
               <td>
                 {editandoId === p.id_producto ? (
                   <input type="number" name="precio" value={formData.precio} onChange={manejarCambio} />
@@ -117,8 +105,6 @@ function Productos() {
                   p.precio
                 )}
               </td>
-              
-              {/* Celda: Botones de Acción */}
               <td>
                 {editandoId === p.id_producto ? (
                   <>
@@ -132,7 +118,6 @@ function Productos() {
                   </>
                 )}
               </td>
-
             </tr>
           ))}
         </tbody>
