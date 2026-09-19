@@ -35,7 +35,7 @@ function Ventas() {
           </tr>
         </thead>
         <tbody>
-          {ventas.map(v => (
+          {Array.isArray(ventas) && ventas.map(v => (
             <tr key={v.id_venta}>
               <td>{v.id_venta}</td>
               <td>{v.id_cliente}</td>
