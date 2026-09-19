@@ -8,6 +8,7 @@ function Productos() {
 
   const [editandoId, setEditandoId] = useState(null);
   const [formData, setFormData] = useState({ nomproducto: '', cantidad: '', precio: '' });
+  const [nuevoProducto, setNuevoProducto] = useState({ nomproducto: '', cantidad: '', precio: '' });
 
   const cargarProductos = () => {
     api.get('/productos')
@@ -24,6 +25,21 @@ function Productos() {
   useEffect(() => {
     cargarProductos();
   }, []);
+
+  const manejarCambioNuevo = (e) => {
+    setNuevoProducto({ ...nuevoProducto, [e.target.name]: e.target.value });
+  };
+
+  const crearProducto = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post('/productos', nuevoProducto);
+      setNuevoProducto({ nomproducto: '', cantidad: '', precio: '' });
+      cargarProductos();
+    } catch (err) {
+      alert('Error al crear el producto');
+    }
+  };
 
   const eliminarProducto = async (id) => {
     if (window.confirm('¿Seguro que deseas eliminar este producto?')) {
@@ -69,6 +85,14 @@ function Productos() {
 
   return (
     <div>
+      <h2>Registrar Nuevo Producto</h2>
+      <form onSubmit={crearProducto} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+        <input type="text" name="nomproducto" placeholder="Nombre" value={nuevoProducto.nomproducto} onChange={manejarCambioNuevo} required />
+        <input type="number" name="cantidad" placeholder="Cantidad" value={nuevoProducto.cantidad} onChange={manejarCambioNuevo} required />
+        <input type="number" name="precio" placeholder="Precio" value={nuevoProducto.precio} onChange={manejarCambioNuevo} required />
+        <button type="submit">Guardar Producto</button>
+      </form>
+
       <h2>Listado de Productos</h2>
       <table border="1" cellPadding="8">
         <thead>
